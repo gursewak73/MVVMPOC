@@ -1,13 +1,13 @@
 package com.architecturepoc.ui.adapter;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.architecturepoc.R;
+import com.architecturepoc.databinding.ItemDataBinding;
 import com.architecturepoc.db.entity.EntityUser;
 
 import java.util.ArrayList;
@@ -20,22 +20,20 @@ import java.util.List;
 public class RecyclerAdapterUserData extends RecyclerView.Adapter<RecyclerAdapterUserData.ViewHolder> {
 
     private List<EntityUser> entityUsers = new ArrayList<>();
-    private Context context;
 
     public RecyclerAdapterUserData(List<EntityUser> entityUsers, Context context) {
         this.entityUsers.addAll(entityUsers);
-        this.context = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_data, parent, false);
-        return new ViewHolder(view);
+        ItemDataBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_data, parent, false);
+        return new ViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.tvData.setText(entityUsers.get(position).getId()  + " || " + entityUsers.get(position).getName());
+        holder.binding.setUser(entityUsers.get(position));
     }
 
     @Override
@@ -43,18 +41,18 @@ public class RecyclerAdapterUserData extends RecyclerView.Adapter<RecyclerAdapte
         return entityUsers.size();
     }
 
-    public void refresh(List<EntityUser> entityUsers){
+    public void refresh(List<EntityUser> entityUsers) {
         this.entityUsers.clear();
         this.entityUsers.addAll(entityUsers);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvData;
+        private ItemDataBinding binding;
 
-        public ViewHolder(View itemView) {
-            super(itemView);
-            tvData = itemView.findViewById(R.id.tvData);
+        public ViewHolder(ItemDataBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 }
